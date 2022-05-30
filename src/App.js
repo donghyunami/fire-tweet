@@ -1,5 +1,7 @@
+import PrivateRoute from './Router';
+
 function App() {
-  return <div className="App">리액트 초기 세팅</div>;
+  return <PrivateRoute />;
 }
 
 export default App;
