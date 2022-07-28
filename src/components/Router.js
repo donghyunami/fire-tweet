@@ -1,21 +1,34 @@
-import { useState, Fragment } from 'react';
-import { HashRouter as Router, Route, Switch } from 'react-router-dom';
-import { Home, Auth } from 'routes';
+import {
+  HashRouter as Router,
+  Redirect,
+  Route,
+  Switch,
+} from 'react-router-dom';
+import { Home, Auth, Profile } from 'routes';
+import Navigation from 'components/Navigation';
 
 const PrivateRoute = ({ isLoggedIn }) => {
   return (
     <Router>
+      {isLoggedIn && <Navigation />}
       <Switch>
         {isLoggedIn ? (
-          <Fragment>
+          <>
             <Route exact path="/">
               <Home />
             </Route>
-          </Fragment>
+            <Route exact path="/profile">
+              <Profile />
+            </Route>
+            <Redirect from="*" to="/" />
+          </>
         ) : (
-          <Route exact path="/">
-            <Auth />
-          </Route>
+          <>
+            <Route exact path="/">
+              <Auth />
+            </Route>
+            <Redirect from="*" to="/" />
+          </>
         )}
       </Switch>
     </Router>
