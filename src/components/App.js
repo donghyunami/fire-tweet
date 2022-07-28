@@ -19,7 +19,7 @@ function App() {
   return (
     <>
       {init ? <AppRouter isLoggedIn={isLoggedIn} /> : '초기화중...'}
-      <footer>&copy; {new Date().getFullYear()}</footer>
+      <footer>&copy; {new Date().getFullYear()} Nwitter</footer>
     </>
   );
 }

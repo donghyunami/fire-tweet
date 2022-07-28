@@ -3,7 +3,11 @@ import {
   createUserWithEmailAndPassword,
   getAuth,
   signInWithEmailAndPassword,
+  signInWithPopup,
 } from 'firebase/auth';
+
+import { GoogleAuthProvider } from 'firebase/auth';
+import { GithubAuthProvider } from 'firebase/auth';
 
 const Auth = () => {
   const [email, setEmail] = useState('');
@@ -41,6 +45,22 @@ const Auth = () => {
     }
   };
   const toggleAccount = () => setNewAccount(prev => !prev);
+  const onSocialClick = async e => {
+    const {
+      target: { name },
+    } = e;
+
+    let provider;
+    const auth = getAuth();
+    if (name === 'google') {
+      provider = new GoogleAuthProvider();
+    } else if (name === 'github') {
+      provider = new GithubAuthProvider();
+    }
+    const data = await signInWithPopup(auth, provider);
+    console.log(data);
+  };
+
   return (
     <div>
       <form onSubmit={onSubmit}>
@@ -67,8 +87,12 @@ const Auth = () => {
         {newAccount ? '로그인' : '새 계정 생성'}
       </span>
       <div>
-        <button>Continue width Goole</button>
-        <button>Continue width Github</button>
+        <button name="google" onClick={onSocialClick}>
+          Continue width Goole
+        </button>
+        <button name="github" onClick={onSocialClick}>
+          Continue width Github
+        </button>
       </div>
     </div>
   );
