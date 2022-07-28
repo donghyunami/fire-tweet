@@ -9,6 +9,7 @@ const Auth = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [newAccount, setNewAccount] = useState(true);
+  const [error, setError] = useState('');
 
   const onChange = e => {
     const {
@@ -36,10 +37,10 @@ const Auth = () => {
       }
       console.log(data);
     } catch (err) {
-      console.error(err);
+      setError(err.message.replace('Firebase:', ''));
     }
   };
-
+  const toggleAccount = () => setNewAccount(prev => !prev);
   return (
     <div>
       <form onSubmit={onSubmit}>
@@ -60,7 +61,11 @@ const Auth = () => {
           onChange={onChange}
         />
         <button type="submit">{newAccount ? '새 계정 생성' : '로그인'}</button>
+        {error}
       </form>
+      <span onClick={toggleAccount}>
+        {newAccount ? '로그인' : '새 계정 생성'}
+      </span>
       <div>
         <button>Continue width Goole</button>
         <button>Continue width Github</button>
