@@ -1,10 +1,8 @@
 import { useState, Fragment } from 'react';
 import { HashRouter as Router, Route, Switch } from 'react-router-dom';
-import { Home, Auth } from './routes';
+import { Home, Auth } from 'routes';
 
-const PrivateRoute = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+const PrivateRoute = ({ isLoggedIn }) => {
   return (
     <Router>
       <Switch>
