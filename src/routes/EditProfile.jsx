@@ -1,7 +1,7 @@
 import React from 'react';
 
 const EditProfile = () => {
-  return <sapn>EditProfile</sapn>;
+  return <span>EditProfile</span>;
 };
 
 export default EditProfile;

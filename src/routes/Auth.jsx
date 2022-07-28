@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Auth = () => {
-  return <sapn>로그인 필요</sapn>;
+  return <span>로그인 필요</span>;
 };
 
 export default Auth;
