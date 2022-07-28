@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  signInWithEmailAndPassword,
+} from 'firebase/auth';
 
 const Auth = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [newAccount, setNewAccount] = useState(true);
 
   const onChange = e => {
     const {
@@ -15,8 +21,23 @@ const Auth = () => {
     }
   };
 
-  const onSubmit = e => {
+  const onSubmit = async e => {
     e.preventDefault();
+
+    try {
+      let data;
+      const auth = getAuth();
+      if (newAccount) {
+        // create account
+        data = await createUserWithEmailAndPassword(auth, email, password);
+      } else {
+        // logIn
+        data = await signInWithEmailAndPassword(auth, email, password);
+      }
+      console.log(data);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
@@ -38,7 +59,7 @@ const Auth = () => {
           value={password}
           onChange={onChange}
         />
-        <button type="submit">로그인</button>
+        <button type="submit">{newAccount ? '새 계정 생성' : '로그인'}</button>
       </form>
       <div>
         <button>Continue width Goole</button>
