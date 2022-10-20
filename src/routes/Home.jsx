@@ -1,36 +1,35 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { dbService } from "fbase";
-import { addDoc, query, collection, getDocs } from "firebase/firestore";
+import { addDoc, query, collection, getDocs, orderBy, onSnapshot } from "firebase/firestore";
 
-const Home = () => {
+const Home = ({ userObj }) => {
   const [nweet, setNweet] = useState("");
   const [nweets, setNweets] = useState([]);
-
-  const getNweets = useCallback(async () => {
-    const nweetsCollectionRef = collection(dbService, "nweets");
-    const dbNweets = await getDocs(query(nweetsCollectionRef));
-    const getData = dbNweets.docs.map((doc) => {
-      return {
-        id: doc.id,
-        ...doc.data(),
-      };
-    });
-    setNweets(getData);
-  }, []);
+  const nweetsCollectionRef = collection(dbService, "nweets");
 
   useEffect(() => {
-    getNweets();
-  }, [getNweets]);
+    const q = query(
+      nweetsCollectionRef,
+      orderBy("createdAt", "desc") //최신순(최신 업로드한 내용이 상단부터)
+    );
+    onSnapshot(q, (snapshot) => {
+      const nweetArr = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setNweets(nweetArr);
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      const docRef = await addDoc(collection(dbService, "nweets"), {
-        nweet,
+      if(!nweet) return
+      await addDoc(collection(dbService, "nweets"), {
+        text: nweet,
         createdAt: Date.now(),
       });
-      docRef && alert("추가되었습니다.");
       setNweet("");
     } catch (err) {
       console.error(err);
@@ -57,12 +56,12 @@ const Home = () => {
         <button type="submit">Nweet</button>
       </form>
       <div>
-        {nweets.length === 0 && <div>로딩중...</div>}
-        {nweets && nweets.map(({id, nweet})=> (
-          <div key={id}>
-            <h4>{nweet}</h4>
-          </div>
-        ))}
+        {nweets &&
+          nweets.map(({ id, text }) => (
+            <div key={id}>
+              <h4>{text}</h4>
+            </div>
+          ))}
       </div>
     </div>
   );

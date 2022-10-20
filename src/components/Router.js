@@ -7,7 +7,7 @@ import {
 import { Home, Auth, Profile } from 'routes';
 import Navigation from 'components/Navigation';
 
-const PrivateRoute = ({ isLoggedIn }) => {
+const PrivateRoute = ({ isLoggedIn, userObj }) => {
   return (
     <Router>
       {isLoggedIn && <Navigation />}
@@ -15,7 +15,7 @@ const PrivateRoute = ({ isLoggedIn }) => {
         {isLoggedIn ? (
           <>
             <Route exact path="/">
-              <Home />
+              <Home userObj={userObj}/>
             </Route>
             <Route exact path="/profile">
               <Profile />

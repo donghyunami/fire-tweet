@@ -88,7 +88,7 @@ const Auth = () => {
       </span>
       <div>
         <button name="google" onClick={onSocialClick}>
-          Continue width Goole
+          Continue width Google
         </button>
         <button name="github" onClick={onSocialClick}>
           Continue width Github
