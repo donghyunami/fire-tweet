@@ -1,13 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { dbService } from "fbase";
+import { addDoc, collection } from "firebase/firestore";
 
 const Home = () => {
-  const [nweet, setNweet] = useState('');
-  const onSubmit = e => {
+  const [nweet, setNweet] = useState("");
+  const onSubmit = async (e) => {
     e.preventDefault();
-    console.log(nweet);
+
+    try {
+      const docRef = await addDoc(collection(dbService, "nweets"), {
+        nweet,
+        createdAt: Date.now(),
+      });
+      docRef && alert("추가되었습니다.");
+      setNweet("");
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  const onChange = e => {
+  const onChange = (e) => {
     const {
       target: { value },
     } = e;
