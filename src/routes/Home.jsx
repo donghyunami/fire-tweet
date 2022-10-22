@@ -1,10 +1,9 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { dbService } from "fbase";
 import {
   addDoc,
   query,
   collection,
-  getDocs,
   orderBy,
   onSnapshot,
 } from "firebase/firestore";
@@ -34,7 +33,7 @@ const Home = ({ userObj }) => {
     e.preventDefault();
     try {
       if (!nweet) return;
-      await addDoc(collection(dbService, "nweets"), {
+      await addDoc(nweetsCollectionRef, {
         creatorId: userObj.uid,
         text: nweet,
         createdAt: Date.now(),
