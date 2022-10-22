@@ -35,19 +35,21 @@ const Nweet = ({ nweetObj, isOwner }) => {
   return (
     <div>
       {editing ? (
-        <>
-          <form onSubmit={onSubmitUpdate}>
-            <input
-              type="text"
-              value={editNweet}
-              required
-              onChange={onChangeEditNweet}
-              placeholder="수정할 내용을 입력해주세요"
-            />
-          <button onClick={onSubmitUpdate}>Edit</button>
-          </form>
-          <button onClick={onUpdatetoggleEditing}>Cancel</button>
-        </>
+        isOwner && (
+          <>
+            <form onSubmit={onSubmitUpdate}>
+              <input
+                type="text"
+                value={editNweet}
+                required
+                onChange={onChangeEditNweet}
+                placeholder="수정할 내용을 입력해주세요"
+              />
+              <button onClick={onSubmitUpdate}>Edit</button>
+            </form>
+            <button onClick={onUpdatetoggleEditing}>Cancel</button>
+          </>
+        )
       ) : (
         <>
           <h4>{nweetObj.text}</h4>
