@@ -73,7 +73,7 @@ const Auth = () => {
           onChange={onChange}
         />
         <input
-          type="text"
+          type="password"
           name="password"
           placeholder="Password"
           required

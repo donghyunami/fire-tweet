@@ -1,6 +1,14 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { dbService } from "fbase";
-import { addDoc, query, collection, getDocs, orderBy, onSnapshot } from "firebase/firestore";
+import {
+  addDoc,
+  query,
+  collection,
+  getDocs,
+  orderBy,
+  onSnapshot,
+} from "firebase/firestore";
+import Nweet from "components/Nweet";
 
 const Home = ({ userObj }) => {
   const [nweet, setNweet] = useState("");
@@ -19,14 +27,15 @@ const Home = ({ userObj }) => {
       }));
       setNweets(nweetArr);
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      if(!nweet) return
+      if (!nweet) return;
       await addDoc(collection(dbService, "nweets"), {
+        creatorId: userObj.uid,
         text: nweet,
         createdAt: Date.now(),
       });
@@ -57,10 +66,12 @@ const Home = ({ userObj }) => {
       </form>
       <div>
         {nweets &&
-          nweets.map(({ id, text }) => (
-            <div key={id}>
-              <h4>{text}</h4>
-            </div>
+          nweets.map((nweet) => (
+            <Nweet
+              key={nweet.id}
+              nweetObj={nweet}
+              isOwner={nweet.creatorId === userObj.uid}
+            />
           ))}
       </div>
     </div>
