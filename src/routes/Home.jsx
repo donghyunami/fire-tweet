@@ -12,6 +12,8 @@ import Nweet from "components/Nweet";
 const Home = ({ userObj }) => {
   const [nweet, setNweet] = useState("");
   const [nweets, setNweets] = useState([]);
+  const [attachment, setAttachment] = useState("");
+
   const nweetsCollectionRef = collection(dbService, "nweets");
 
   useEffect(() => {
@@ -51,6 +53,20 @@ const Home = ({ userObj }) => {
 
     setNweet(value);
   };
+
+  const onChangeFile = (e) => {
+    const { files } = e.target;
+    const theFile = files[0];
+    const reader = new FileReader();
+    reader.addEventListener("loadend", (e) => {
+      const { result } = e.currentTarget;
+      setAttachment(result);
+    });
+    reader.readAsDataURL(theFile);
+  };
+
+  const onClickClearattachment = (e) => setAttachment("");
+
   return (
     <div>
       <form onSubmit={onSubmit}>
@@ -61,7 +77,14 @@ const Home = ({ userObj }) => {
           placeholder="무슨 생각을 하고 있나요?"
           maxLength={120}
         />
+        <input type="file" accept="image/*" onChange={onChangeFile} />
         <button type="submit">Nweet</button>
+        {attachment && (
+          <div>
+            <img src={attachment} alt="" width="50px" height="50px" />
+            <button onClick={onClickClearattachment}>clear</button>
+          </div>
+        )}
       </form>
       <div>
         {nweets &&
