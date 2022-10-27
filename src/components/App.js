@@ -21,7 +21,6 @@ function App() {
   return (
     <>
       {init ? <AppRouter isLoggedIn={isLoggedIn} userObj={userObj}/> : '초기화중...'}
-      <footer>&copy; {new Date().getFullYear()} Nwitter</footer>
     </>
   );
 }
