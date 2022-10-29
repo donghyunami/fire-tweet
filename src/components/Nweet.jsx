@@ -4,10 +4,12 @@ import { doc, updateDoc, deleteDoc } from "firebase/firestore";
 import React, { useState } from "react";
 
 const Nweet = ({ nweetObj, isOwner }) => {
-  const [editing, setEditing] = useState(false);
-  const [editNweet, setEditNweet] = useState(nweetObj.text);
+  const {id, text, imgSrc} = nweetObj;
 
-  const nweetRef = doc(dbService, "nweets", `${nweetObj.id}`);
+  const [editing, setEditing] = useState(false);
+  const [editNweet, setEditNweet] = useState(text);
+
+  const nweetRef = doc(dbService, "nweets", `${id}`);
 
   const onDeleteClick = async (e) => {
     const ok = window.confirm("Nweet를 정말로 삭제할건가요?");
@@ -25,9 +27,9 @@ const Nweet = ({ nweetObj, isOwner }) => {
   const onSubmitUpdate = async (e) => {
     e.preventDefault();
 
-    const nweetRef = doc(dbService, "nweets", `${nweetObj.id}`);
+    const nweetRef = doc(dbService, "nweets", `${id}`);
     await updateDoc(nweetRef, {
-      text: editNweet || nweetObj.text,
+      text: editNweet || text,
     });
     setEditing(false);
   };
@@ -52,7 +54,10 @@ const Nweet = ({ nweetObj, isOwner }) => {
         )
       ) : (
         <>
-          <h4>{nweetObj.text}</h4>
+          <h4>{text}</h4>
+          {imgSrc && (
+            <img src={imgSrc} alt="nweet-img" width="50px" height="50px"/>
+          )}
           {isOwner && (
             <>
               <button onClick={onDeleteClick}>Delete Nweet</button>
