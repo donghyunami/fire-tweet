@@ -1,10 +1,12 @@
 import { dbService, deService } from "fbase";
-import { doc, updateDoc, deleteDoc } from "firebase/firestore";
+import { doc, updateDoc, deleteDoc, getFirestore } from "firebase/firestore";
+import { storageService } from "../fbase";
+import { deleteObject, ref } from "firebase/storage";
 
 import React, { useState } from "react";
 
 const Nweet = ({ nweetObj, isOwner }) => {
-  const {id, text, imgSrc} = nweetObj;
+  const { id, text, imgSrc } = nweetObj;
 
   const [editing, setEditing] = useState(false);
   const [editNweet, setEditNweet] = useState(text);
@@ -16,6 +18,8 @@ const Nweet = ({ nweetObj, isOwner }) => {
 
     if (ok) {
       ok && (await deleteDoc(nweetRef));
+      const imgFileRef = ref(storageService, imgSrc);
+      await deleteObject(imgFileRef);
     }
   };
 
@@ -56,7 +60,7 @@ const Nweet = ({ nweetObj, isOwner }) => {
         <>
           <h4>{text}</h4>
           {imgSrc && (
-            <img src={imgSrc} alt="nweet-img" width="50px" height="50px"/>
+            <img src={imgSrc} alt="nweet-img" width="50px" height="50px" />
           )}
           {isOwner && (
             <>
