@@ -44,14 +44,16 @@ const Home = ({ userObj }) => {
     try {
       // 이미지를 첨부하는 경우 storage에 업로드
       if (attachment  !== "") {
+        // storage에 파일 업로드
         const fileRef = ref(storageService, `${userObj.uid}/${uuidv4()}`);
-        //storage 참조 경로로 파일 업로드 하기
-        const response = await uploadString(fileRef, attachment, "data_url");
-        //storage 참조 경로에 있는 파일의 URL을 다운로드해서 attachmentUrl 변수에 넣어서 업데이트
-        console.log(response)
-        attachmentUrl = await getDownloadURL(response.ref);
+        const imageRef = await uploadString(fileRef, attachment, "data_url");
+        console.log(imageRef)
+
+        // storage에 파일 url 다운로드
+        attachmentUrl = await getDownloadURL(imageRef.ref);
       }
 
+      // Firestore(db)에 업로드
       const nweetObj = {
         creatorId: userObj.uid,
         text: nweet,
