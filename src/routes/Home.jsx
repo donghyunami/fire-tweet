@@ -1,6 +1,6 @@
-import {v4 as uuidv4} from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { dbService, storageService } from "fbase";
 import {
   addDoc,
@@ -9,13 +9,14 @@ import {
   orderBy,
   onSnapshot,
 } from "firebase/firestore";
-import { ref, uploadString } from "firebase/storage";
+import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import Nweet from "components/Nweet";
 
 const Home = ({ userObj }) => {
   const [nweet, setNweet] = useState("");
   const [nweets, setNweets] = useState([]);
   const [attachment, setAttachment] = useState("");
+  const fileInputRef = useRef(null);
 
   const nweetsCollectionRef = collection(dbService, "nweets");
 
@@ -36,17 +37,32 @@ const Home = ({ userObj }) => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    let attachmentUrl = "";
+
+    if (!nweet) return;
+
     try {
-      // if (!nweet) return;
-      // await addDoc(nweetsCollectionRef, {
-      //   creatorId: userObj.uid,
-      //   text: nweet,
-      //   createdAt: Date.now(),
-      // });
-      // setNweet("");
-      const fileRef = ref(storageService, `${userObj.uid}/`);
-      const response = await uploadString(fileRef, attachment, "data_url");
-      console.log(response);
+      // 이미지를 첨부하는 경우 storage에 업로드
+      if (attachment  !== "") {
+        const fileRef = ref(storageService, `${userObj.uid}/${uuidv4()}`);
+        //storage 참조 경로로 파일 업로드 하기
+        const response = await uploadString(fileRef, attachment, "data_url");
+        //storage 참조 경로에 있는 파일의 URL을 다운로드해서 attachmentUrl 변수에 넣어서 업데이트
+        console.log(response)
+        attachmentUrl = await getDownloadURL(response.ref);
+      }
+
+      const nweetObj = {
+        creatorId: userObj.uid,
+        text: nweet,
+        createdAt: Date.now(),
+        imgSrc: attachmentUrl
+      };
+      
+      await addDoc(nweetsCollectionRef, nweetObj);
+
+      setNweet("");
+      setAttachment("");
     } catch (err) {
       console.error(err);
     }
@@ -61,6 +77,7 @@ const Home = ({ userObj }) => {
   };
 
   const onChangeFile = (e) => {
+    console.dir(e.target)
     const { files } = e.target;
     const theFile = files[0];
     const reader = new FileReader();
@@ -71,7 +88,10 @@ const Home = ({ userObj }) => {
     reader.readAsDataURL(theFile);
   };
 
-  const onClickClearattachment = (e) => setAttachment("");
+  const onClickClearattachment = (e) => {
+    fileInputRef.current.value = '';
+    setAttachment("");
+  };
 
   return (
     <div>
@@ -83,9 +103,11 @@ const Home = ({ userObj }) => {
           placeholder="무슨 생각을 하고 있나요?"
           maxLength={120}
         />
-        <input type="file" accept="image/*" onChange={onChangeFile} />
+        <input type="file" accept="image/*" ref={fileInputRef} onChange={onChangeFile} />
         <button type="submit">Nweet</button>
+
         {attachment && (
+        /* 이미지 미리보기 */
           <div>
             <img src={attachment} alt="" width="50px" height="50px" />
             <button onClick={onClickClearattachment}>clear</button>
