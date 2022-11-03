@@ -1,26 +1,46 @@
-import { useEffect, useState } from 'react';
-import AppRouter from 'components/Router';
-import { authService } from 'fbase';
+import { useEffect, useState } from "react";
+import AppRouter from "components/Router";
+import { authService } from "fbase";
+import { updateProfile } from "firebase/auth";
 
 function App() {
   const [init, setInit] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userObj, setUserObj] = useState(null);
 
   useEffect(() => {
-    authService.onAuthStateChanged(user => {
+    authService.onAuthStateChanged((user) => {
+      console.log({ user });
       if (user) {
-        setIsLoggedIn(true);
-        setUserObj(user);
-      } else {
-        setIsLoggedIn(false);
+        setUserObj({
+          displayName: user.displayName,
+          uid: user.uid,
+          updateProfile: (args) => updateProfile(user, { displayName: user.displayName }),
+        });
       }
       setInit(true);
     });
   }, []);
+
+  const refreshUser = async () => {
+    const user = authService.currentUser;
+    setUserObj({
+      displayName: user.displayName,
+      uid: user.uid,
+      updateProfile: (args) => updateProfile(user, { displayName: user.displayName }),
+    });
+  };
+
   return (
     <>
-      {init ? <AppRouter isLoggedIn={isLoggedIn} userObj={userObj}/> : '초기화중...'}
+      {init ? (
+        <AppRouter
+          refreshUser={refreshUser}
+          isLoggedIn={Boolean(userObj)}
+          userObj={userObj}
+        />
+      ) : (
+        "초기화중..."
+      )}
     </>
   );
 }
