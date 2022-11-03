@@ -10,7 +10,7 @@ import Navigation from 'components/Navigation';
 const PrivateRoute = ({ isLoggedIn, userObj }) => {
   return (
     <Router>
-      {isLoggedIn && <Navigation />}
+      {isLoggedIn && <Navigation userObj={userObj}/>}
       <Switch>
         {isLoggedIn ? (
           <>
