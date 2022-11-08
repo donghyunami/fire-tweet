@@ -9,6 +9,7 @@ const Profile = ({ refreshUser, userObj }) => {
 
   const onLogOutClick = () => {
     authService.signOut();
+    refreshUser();
     history.push("/");
   };
 
