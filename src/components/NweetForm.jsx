@@ -70,7 +70,12 @@ const NweetForm = ({ userObj }) => {
     setAttachment("");
   };
   return (
-    <form onSubmit={onSubmit}>
+    <form
+      style={{
+        marginTop: 30,
+      }}
+      onSubmit={onSubmit}
+    >
       <input
         type="text"
         value={nweet}

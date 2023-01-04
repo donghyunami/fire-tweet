@@ -1,4 +1,11 @@
 import React, { useState } from 'react';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faTwitter,
+  faGoogle,
+  faGithub,
+} from "@fortawesome/free-brands-svg-icons";
+
 import {
   getAuth,
   signInWithPopup,
@@ -9,10 +16,7 @@ import { GithubAuthProvider } from 'firebase/auth';
 import AuthForm from 'components/AuthForm';
 
 const Auth = () => {
-  // const [email, setEmail] = useState('');
-  // const [password, setPassword] = useState('');
   const [newAccount, setNewAccount] = useState(true);
-  // const [error, setError] = useState('');
 
   const toggleAccount = () => setNewAccount(prev => !prev);
   const onSocialClick = async e => {
@@ -32,37 +36,25 @@ const Auth = () => {
   };
 
   return (
-    <div>
+    <div className="authContainer">
+       <FontAwesomeIcon
+        icon={faTwitter}
+        color={"#04AAFF"}
+        size="3x"
+        style={{ marginBottom: 30 }}
+      />
       <AuthForm newAccount={newAccount}/>
-      {/* <form onSubmit={onSubmit}>
-        <input
-          type="text"
-          name="email"
-          placeholder="Email"
-          required
-          value={email}
-          onChange={onChange}
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          required
-          value={password}
-          onChange={onChange}
-        />
-        <button type="submit">{newAccount ? '새 계정 생성' : '로그인'}</button>
-        {error}
-      </form> */}
       <span onClick={toggleAccount}>
         {newAccount ? '로그인' : '새 계정 생성'}
       </span>
-      <div>
-        <button name="google" onClick={onSocialClick}>
+      <div className="authBtns">
+        <button className="authBtn" name="google" onClick={onSocialClick}>
           Continue width Google
+          <FontAwesomeIcon icon={faGoogle} />
         </button>
-        <button name="github" onClick={onSocialClick}>
+        <button className="authBtn" name="github" onClick={onSocialClick}>
           Continue width Github
+          <FontAwesomeIcon icon={faGithub} />
         </button>
       </div>
     </div>

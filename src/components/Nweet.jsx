@@ -63,7 +63,9 @@ const Nweet = ({ nweetObj, isOwner }) => {
             <img src={imgSrc} alt="nweet-img" width="50px" height="50px" />
           )}
           {isOwner && (
-            <div>
+            <div style={{
+              marginTop: 30
+            }}>
               <button onClick={onDeleteClick}>Delete Nweet</button>
               <button onClick={onUpdatetoggleEditing}>Edit Nweet</button>
             </div>
